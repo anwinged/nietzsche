@@ -2,9 +2,33 @@ package main
 
 import "testing"
 
-func TestTemplate(t *testing.T) {
-	result := Template()
-	if result != "World" {
-		t.Errorf("Incorrect render")
+func assertEquals(t *testing.T, expected string, template string, params map[string]string) {
+	result, err := Template(template, params)
+	if err != nil {
+		t.Errorf("Render fails with error \"%s\"", err)
 	}
+	if expected != result {
+		t.Errorf("Render fails. Expect \"%s\", got \"%s\"", expected, result)
+	}
+}
+
+func TestTemplate(t *testing.T) {
+	assertEquals(
+		t,
+		"Bill",
+		"{{name}}",
+		map[string]string{"name": "Bill"},
+	)
+	assertEquals(
+		t,
+		"Jack",
+		"{{name}}",
+		map[string]string{"name": "Jack"},
+	)
+	assertEquals(
+		t,
+		"Hello, World!",
+		"Hello, {{w}}!",
+		map[string]string{"w": "World"},
+	)
 }
