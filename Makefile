@@ -6,10 +6,8 @@ format:
 run:
 	${goexec} run src/main.go
 
-test:
+test: format
 	${goexec} test -v ./src
 
-benchmark:
+benchmark: format
 	${goexec} test -v -bench=. ./src
-
-check: format test
