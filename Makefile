@@ -7,4 +7,7 @@ run:
 test:
 	docker run --rm -v "${PWD}":/app -w /app golang:1.8 go test -v ./src
 
+benchmark:
+	docker run --rm -v "${PWD}":/app -w /app golang:1.8 go test -v -bench=. ./src
+
 check: format test
