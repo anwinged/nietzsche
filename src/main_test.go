@@ -34,7 +34,7 @@ func TestTemplate(t *testing.T) {
 }
 
 func BenchmarkTemplate(b *testing.B) {
-    for i := 0; i < b.N; i++ {
-        Template("Hello, {{world}}!", map[string]string{"world": "World"})
-    }
+	for i := 0; i < b.N; i++ {
+		Template("Hello, {{world}}!", map[string]string{"world": "World"})
+	}
 }
