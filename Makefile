@@ -6,3 +6,5 @@ run:
 
 test:
 	docker run --rm -v "${PWD}":/app -w /app golang:1.8 go test -v ./src
+
+check: format test
