@@ -19,11 +19,11 @@ func assertError(t *testing.T, template string, params map[string]string) {
 	}
 }
 
-func TestTemplate(t *testing.T) {
+func TestOneTagTemplate(t *testing.T) {
 	assertEquals(
 		t,
-		"Bill",
-		"{{name}}",
+		"Bill Clinton",
+		"{{name}} Clinton",
 		map[string]string{"name": "Bill"},
 	)
 	assertEquals(
@@ -32,12 +32,18 @@ func TestTemplate(t *testing.T) {
 		"{{name}}",
 		map[string]string{"name": "Jack"},
 	)
+}
+
+func TestTwoTagTemplate(t *testing.T) {
 	assertEquals(
 		t,
-		"Hello, World!",
-		"Hello, {{w}}!",
-		map[string]string{"w": "World"},
+		"Hello, Great World!",
+		"Hello, {{g}} {{w}}!",
+		map[string]string{"g": "Great", "w": "World"},
 	)
+}
+
+func TestForgottenTag(t *testing.T) {
 	assertError(
 		t,
 		"Hello, {{w",
