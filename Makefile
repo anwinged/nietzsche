@@ -1,4 +1,6 @@
-goexec = docker run --rm -v "${PWD}":/app -w /app golang:1.11 go
+uid = $(shell id -u)
+goimage = docker run --rm --tty --user "${uid}":"${uid}" --volume "${PWD}":/app --workdir /app golang:1.11
+goexec = ${goimage} go
 
 format:
 	${goexec} fmt ./src
