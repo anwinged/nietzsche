@@ -1,2 +1,5 @@
+# Go cache directory
+.cache/
+
 # Sublime Text project files
 *.sublime-*

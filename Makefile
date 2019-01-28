@@ -1,5 +1,17 @@
 uid = $(shell id -u)
-goimage = docker run --rm --tty --user "${uid}":"${uid}" --volume "${PWD}":/app --workdir /app golang:1.11
+gid = $(shell id -g)
+image = golang:1.11
+
+goimage = docker run \
+	--rm \
+	--tty \
+	--init \
+	--user ${uid}:${gid} \
+	--volume "${PWD}":/app \
+	--env GOCACHE=".cache" \
+	--workdir /app \
+	${image}
+
 goexec = ${goimage} go
 
 format:
