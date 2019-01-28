@@ -37,6 +37,9 @@ func Template(template string, params map[string]string) (string, error) {
 		}
 	}
 	if name != "" {
+		if bracket > 0 {
+			return "", errors.New("Unexpected end of placeholder")
+		}
 		result += params[name]
 	}
 

@@ -12,6 +12,13 @@ func assertEquals(t *testing.T, expected string, template string, params map[str
 	}
 }
 
+func assertError(t *testing.T, template string, params map[string]string) {
+	_, err := Template(template, params)
+	if err == nil {
+		t.Errorf("Render success, but error expected")
+	}
+}
+
 func TestTemplate(t *testing.T) {
 	assertEquals(
 		t,
@@ -29,6 +36,11 @@ func TestTemplate(t *testing.T) {
 		t,
 		"Hello, World!",
 		"Hello, {{w}}!",
+		map[string]string{"w": "World"},
+	)
+	assertError(
+		t,
+		"Hello, {{w",
 		map[string]string{"w": "World"},
 	)
 }
