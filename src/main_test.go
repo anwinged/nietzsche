@@ -43,6 +43,15 @@ func TestTwoTagTemplate(t *testing.T) {
 	)
 }
 
+func TestMissedTagValueTemplate(t *testing.T) {
+	assertEquals(
+		t,
+		"Hello, Great !",
+		"Hello, {{g}} {{w}}!",
+		map[string]string{"g": "Great"},
+	)
+}
+
 func TestForgottenTag(t *testing.T) {
 	assertError(
 		t,
