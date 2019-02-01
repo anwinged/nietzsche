@@ -21,7 +21,7 @@ run:
 	${goexec} run src/main.go
 
 test: format
-	${goexec} test -v ./src
+	${goexec} test -v -cover ./src
 
 benchmark: format
 	${goexec} test -v -bench=. ./src
