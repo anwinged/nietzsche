@@ -13,9 +13,9 @@ func assertEquals(t *testing.T, expected string, template string, params Context
 }
 
 func assertError(t *testing.T, template string, params Context) {
-	_, err := Render(template, params)
+	result, err := Render(template, params)
 	if err == nil {
-		t.Errorf("Render success, but error expected")
+		t.Errorf("Render success, but error expected ('%s' => '%s')", template, result)
 	}
 }
 
