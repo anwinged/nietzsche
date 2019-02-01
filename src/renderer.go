@@ -1,6 +1,5 @@
 package main
 
-import "errors"
 import "strings"
 
 type Context map[string]string
@@ -9,52 +8,22 @@ type Context map[string]string
 
 func compile(template string) ([]Section, error) {
 	var sections []Section
-	var bracket = 0
-	var name = ""
-	var chunk = ""
-	for _, char := range template {
-		if char == '{' {
-			if bracket == 0 {
-				bracket = 1
-			} else if bracket == 1 {
-				bracket = 2
-			} else {
-				return nil, errors.New("Unexpected {")
-			}
-		} else if char == '}' {
-			if bracket == 2 {
-				bracket = 1
-			} else if bracket == 1 {
-				bracket = 0
-			} else {
-				return nil, errors.New("Unexpected }")
-			}
-		} else {
-			if bracket == 2 {
-				if chunk != "" {
-					sections = append(sections, NewTextSection(chunk))
-					chunk = ""
-				}
-				name += string(char)
-			} else {
-				if name != "" {
-					sections = append(sections, NewTagSection(name))
-					name = ""
-				}
-				chunk += string(char)
-			}
+	tokenizer := NewTokenizer(template)
+	for {
+		token, err := tokenizer.Next()
+		if err != nil {
+			return []Section{}, err
+		}
+		if token == nil {
+			break
+		}
+		switch token.Type {
+		case TextToken:
+			sections = append(sections, NewTextSection(token.Value))
+		case ValueToken:
+			sections = append(sections, NewTagSection(token.Value))
 		}
 	}
-	if name != "" {
-		if bracket > 0 {
-			return nil, errors.New("Unexpected end of placeholder")
-		}
-		sections = append(sections, NewTagSection(name))
-	}
-	if chunk != "" {
-		sections = append(sections, NewTextSection(chunk))
-	}
-
 	return sections, nil
 }
 
