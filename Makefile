@@ -18,7 +18,7 @@ format:
 	${goexec} fmt ./src
 
 run:
-	${goexec} run src/main.go
+	${goexec} run ./src
 
 test: format
 	${goexec} test -v -cover ./src
