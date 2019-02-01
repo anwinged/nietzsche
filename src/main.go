@@ -5,7 +5,7 @@ import "fmt"
 func main() {
 	result, err := Render(
 		"{{h}}, {{w}}!",
-		map[string]string{"h": "Hello", "w": "World"},
+		Context{"h": "Hello", "w": "World"},
 	)
 
 	if err != nil {

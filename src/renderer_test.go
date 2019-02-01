@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func assertEquals(t *testing.T, expected string, template string, params map[string]string) {
+func assertEquals(t *testing.T, expected string, template string, params Context) {
 	result, err := Render(template, params)
 	if err != nil {
 		t.Errorf("Render fails with error \"%s\"", err)
@@ -12,7 +12,7 @@ func assertEquals(t *testing.T, expected string, template string, params map[str
 	}
 }
 
-func assertError(t *testing.T, template string, params map[string]string) {
+func assertError(t *testing.T, template string, params Context) {
 	_, err := Render(template, params)
 	if err == nil {
 		t.Errorf("Render success, but error expected")
@@ -24,13 +24,13 @@ func TestOneTag(t *testing.T) {
 		t,
 		"Bill Clinton",
 		"{{name}} Clinton",
-		map[string]string{"name": "Bill"},
+		Context{"name": "Bill"},
 	)
 	assertEquals(
 		t,
 		"Jack",
 		"{{name}}",
-		map[string]string{"name": "Jack"},
+		Context{"name": "Jack"},
 	)
 }
 
@@ -39,7 +39,7 @@ func TestTwoTag(t *testing.T) {
 		t,
 		"Hello, Great World!",
 		"Hello, {{g}} {{w}}!",
-		map[string]string{"g": "Great", "w": "World"},
+		Context{"g": "Great", "w": "World"},
 	)
 }
 
@@ -48,7 +48,7 @@ func TestMissedTagValue(t *testing.T) {
 		t,
 		"Hello, Great !",
 		"Hello, {{g}} {{w}}!",
-		map[string]string{"g": "Great"},
+		Context{"g": "Great"},
 	)
 }
 
@@ -56,12 +56,12 @@ func TestForgottenTag(t *testing.T) {
 	assertError(
 		t,
 		"Hello, {{w",
-		map[string]string{"w": "World"},
+		Context{"w": "World"},
 	)
 }
 
 func BenchmarkRender(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Render("Hello, {{world}}!", map[string]string{"world": "World"})
+		Render("Hello, {{world}}!", Context{"world": "World"})
 	}
 }
