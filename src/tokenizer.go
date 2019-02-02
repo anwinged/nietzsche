@@ -9,6 +9,8 @@ type TokenType int
 const (
 	TextToken TokenType = iota
 	ValueToken
+	OpenSectionToken
+	CloseSectionToken
 )
 
 // Token
@@ -33,7 +35,7 @@ func Tokenize(template string) ([]Token, error) {
 		} else if char == '}' {
 			bracket -= 1
 			if bracket == 0 && buffer != "" {
-				tokens = append(tokens, Token{Type: ValueToken, Value: buffer})
+				tokens = append(tokens, createTagToken(buffer))
 				buffer = ""
 			}
 		} else {
@@ -50,4 +52,16 @@ func Tokenize(template string) ([]Token, error) {
 	}
 
 	return tokens, nil
+}
+
+func createTagToken(val string) Token {
+	var head byte = val[0]
+	var tail string = val[1:]
+	switch head {
+	case '#':
+		return Token{Type: OpenSectionToken, Value: tail}
+	case '/':
+		return Token{Type: CloseSectionToken, Value: tail}
+	}
+	return Token{Type: ValueToken, Value: val}
 }

@@ -66,9 +66,9 @@ func TestComplexTokens(t *testing.T) {
 			{Type: TextToken, Value: "Hi, "},
 			{Type: ValueToken, Value: "name"},
 			{Type: TextToken, Value: ", we are "},
-			{Type: ValueToken, Value: "#persons"},
+			{Type: OpenSectionToken, Value: "persons"},
 			{Type: ValueToken, Value: "name"},
-			{Type: ValueToken, Value: "/persons"},
+			{Type: CloseSectionToken, Value: "persons"},
 			{Type: TextToken, Value: "!"},
 		},
 	)
