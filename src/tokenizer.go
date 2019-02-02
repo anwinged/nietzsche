@@ -1,5 +1,7 @@
 package main
 
+import "errors"
+
 // Token type
 
 type TokenType int
@@ -65,6 +67,11 @@ func (t *Tokenizer) Next() (*Token, error) {
 		} else {
 			buffer += string(char)
 		}
+	}
+
+	if bracket > 0 {
+		t.position = len(t.template)
+		return nil, errors.New("Unexpected bracket")
 	}
 
 	t.position += pos + 1
