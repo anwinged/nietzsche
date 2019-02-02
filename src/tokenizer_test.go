@@ -31,6 +31,13 @@ func strTokens(tokens []Token) string {
 	return sb.String()
 }
 
+func assertErrorTokenization(t *testing.T, template string) {
+	_, err := Tokenize(template)
+	if err == nil {
+		t.Errorf("Error expexted, but tokenization successful")
+	}
+}
+
 func TestOneTextToken(t *testing.T) {
 	assertTokenValues(
 		t,
@@ -64,5 +71,26 @@ func TestComplexTokens(t *testing.T) {
 			{Type: ValueToken, Value: "/persons"},
 			{Type: TextToken, Value: "!"},
 		},
+	)
+}
+
+func TestMissedOpenBrackets(t *testing.T) {
+	assertErrorTokenization(
+		t,
+		"Hello, w}}orld",
+	)
+}
+
+func TestMissedClosetBrackets(t *testing.T) {
+	assertErrorTokenization(
+		t,
+		"Hello, {{world",
+	)
+}
+
+func TestTooManyPairBrackets(t *testing.T) {
+	assertErrorTokenization(
+		t,
+		"Hello, {{world}}}}",
 	)
 }
