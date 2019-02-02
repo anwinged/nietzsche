@@ -60,6 +60,21 @@ func TestForgottenTag(t *testing.T) {
 	)
 }
 
+func TestGroupTag(t *testing.T) {
+	assertEquals(
+		t,
+		"Hello, Mike, John, Kelly, !",
+		"Hello, {{#persons}}{{name}}, {{/persons}}!",
+		Context{
+			"persons": ContextList{
+				Context{"name": "Mike"},
+				Context{"name": "John"},
+				Context{"name": "Kelly"},
+			},
+		},
+	)
+}
+
 func BenchmarkRender(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Render("Hello, {{world}}!", Context{"world": "World"})

@@ -2,7 +2,9 @@ package main
 
 import "strings"
 
-type Context map[string]string
+type Context map[string]interface{}
+
+type ContextList []Context
 
 // COMPILE
 
@@ -12,12 +14,28 @@ func Compile(template string) ([]Section, error) {
 	if err != nil {
 		return nil, err
 	}
+	var group bool = false
+	var buffer []Section
 	for _, token := range tokens {
 		switch token.Type {
 		case TextToken:
-			sections = append(sections, NewTextSection(token.Value))
+			if group {
+				buffer = append(buffer, NewTextSection(token.Value))
+			} else {
+				sections = append(sections, NewTextSection(token.Value))
+			}
 		case ValueToken:
-			sections = append(sections, NewValueSection(token.Value))
+			if group {
+				buffer = append(buffer, NewValueSection(token.Value))
+			} else {
+				sections = append(sections, NewValueSection(token.Value))
+			}
+		case OpenSectionToken:
+			group = true
+		case CloseSectionToken:
+			group = false
+			sections = append(sections, NewGroupSection(token.Value, buffer))
+			buffer = []Section{}
 		}
 	}
 	return sections, nil
