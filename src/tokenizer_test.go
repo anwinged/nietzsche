@@ -61,7 +61,7 @@ func TestOneValueToken(t *testing.T) {
 func TestComplexTokens(t *testing.T) {
 	assertTokenValues(
 		t,
-		"Hi, {{name}}, we are {{#persons}}{{name}}{{/persons}}!",
+		"Hi, {{name}}, we are {{#persons}}{{ name }}{{/ persons}}!",
 		[]Token{
 			{Type: TextToken, Value: "Hi, "},
 			{Type: ValueToken, Value: "name"},

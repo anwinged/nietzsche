@@ -1,6 +1,7 @@
 package main
 
 import "errors"
+import "strings"
 
 // Token type
 
@@ -55,13 +56,14 @@ func Tokenize(template string) ([]Token, error) {
 }
 
 func createTagToken(val string) Token {
-	var head byte = val[0]
-	var tail string = val[1:]
+	trimmed := strings.TrimSpace(val)
+	var head byte = trimmed[0]
+	var tail string = strings.TrimSpace(trimmed[1:])
 	switch head {
 	case '#':
 		return Token{Type: OpenSectionToken, Value: tail}
 	case '/':
 		return Token{Type: CloseSectionToken, Value: tail}
 	}
-	return Token{Type: ValueToken, Value: val}
+	return Token{Type: ValueToken, Value: trimmed}
 }
