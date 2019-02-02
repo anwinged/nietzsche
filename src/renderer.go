@@ -6,17 +6,13 @@ type Context map[string]string
 
 // COMPILE
 
-func compile(template string) ([]Section, error) {
+func Compile(template string) ([]Section, error) {
 	var sections []Section
-	tokenizer := NewTokenizer(template)
-	for {
-		token, err := tokenizer.Next()
-		if err != nil {
-			return []Section{}, err
-		}
-		if token == nil {
-			break
-		}
+	tokens, err := Tokenize(template)
+	if err != nil {
+		return nil, err
+	}
+	for _, token := range tokens {
 		switch token.Type {
 		case TextToken:
 			sections = append(sections, NewTextSection(token.Value))
@@ -27,8 +23,10 @@ func compile(template string) ([]Section, error) {
 	return sections, nil
 }
 
+// RENDER
+
 func Render(template string, params Context) (string, error) {
-	sections, err := compile(template)
+	sections, err := Compile(template)
 	if err != nil {
 		return "", err
 	}

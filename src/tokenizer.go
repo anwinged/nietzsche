@@ -18,62 +18,36 @@ type Token struct {
 	Value string
 }
 
-func NewToken(tt TokenType, v string) *Token {
-	t := new(Token)
-	t.Type = tt
-	t.Value = v
-	return t
-}
-
-// Tokenizer
-
-type Tokenizer struct {
-	template string
-	position int
-	buffer   string
-}
-
-func NewTokenizer(template string) *Tokenizer {
-	t := new(Tokenizer)
-	t.template = template
-	t.position = 0
-	t.buffer = ""
-	return t
-}
-
-func (t *Tokenizer) Next() (*Token, error) {
-	if t.position >= len(t.template) {
-		return nil, nil
-	}
-
-	var bracket int = 0
+func Tokenize(template string) ([]Token, error) {
+	var tokens []Token
 	var buffer string
-	var pos int
-	var char rune
+	var bracket int = 0
 
-	for pos, char = range t.template[t.position:] {
+	for _, char := range template {
 		if char == '{' {
 			bracket += 1
 			if bracket == 2 && buffer != "" {
-				t.position += pos - 1
-				return NewToken(TextToken, buffer), nil
+				tokens = append(tokens, Token{Type: TextToken, Value: buffer})
+				buffer = ""
 			}
 		} else if char == '}' {
 			bracket -= 1
 			if bracket == 0 && buffer != "" {
-				t.position += pos + 1
-				return NewToken(ValueToken, buffer), nil
+				tokens = append(tokens, Token{Type: ValueToken, Value: buffer})
+				buffer = ""
 			}
 		} else {
 			buffer += string(char)
 		}
 	}
 
-	if bracket > 0 {
-		t.position = len(t.template)
+	if bracket != 0 {
 		return nil, errors.New("Unexpected bracket")
 	}
 
-	t.position += pos + 1
-	return NewToken(TextToken, buffer), nil
+	if buffer != "" {
+		tokens = append(tokens, Token{Type: TextToken, Value: buffer})
+	}
+
+	return tokens, nil
 }

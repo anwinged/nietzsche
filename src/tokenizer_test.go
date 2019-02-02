@@ -1,54 +1,68 @@
 package main
 
 import "testing"
+import "reflect"
+import "strings"
 
-func assertTokenValues(t *testing.T, template string, expectedTokens []string) {
-	tokenizer := NewTokenizer(template)
-	index := 0
-	for {
-		token, err := tokenizer.Next()
-		if token == nil {
-			break
-		}
-		if err != nil {
-			t.Errorf("Error not expexted, template '%s'", template)
-			return
-		}
-		if index >= len(expectedTokens) {
-			t.Errorf(
-				"Unexpeted token, template '%s', expect nothing got '%s'",
-				template, token.Value)
-			return
-		}
-		expected := expectedTokens[index]
-		if token.Value != expected {
-			t.Errorf(
-				"Unexpected token, template '%s', expected '%s', got '%s'",
-				template, expected, token.Value)
-			return
-		}
-		index++
+func assertTokenValues(t *testing.T, template string, expected []Token) {
+	tokens, err := Tokenize(template)
+	if err != nil {
+		t.Errorf("Error not expexted, template '%s'", template)
+		return
 	}
-	length := len(expectedTokens)
-	if index != length {
+	if !reflect.DeepEqual(expected, tokens) {
 		t.Errorf(
-			"Unexpected token count, template '%s', expected %d, got %d",
-			template, length, index)
+			"Unexpected tokens, template '%s', expect %s, got %s",
+			template, strTokens(expected), strTokens(tokens),
+		)
 	}
+}
+
+func strTokens(tokens []Token) string {
+	var sb strings.Builder
+	sb.WriteString("[")
+	for pos, t := range tokens {
+		sb.WriteString("`" + t.Value + "`")
+		if pos < len(tokens)-1 {
+			sb.WriteString(", ")
+		}
+	}
+	sb.WriteString("]")
+	return sb.String()
 }
 
 func TestOneTextToken(t *testing.T) {
 	assertTokenValues(
 		t,
 		"hello",
-		[]string{"hello"},
+		[]Token{
+			{Type: TextToken, Value: "hello"},
+		},
 	)
 }
 
-func TestOneValueTonen(t *testing.T) {
+func TestOneValueToken(t *testing.T) {
 	assertTokenValues(
 		t,
 		"{{hello}}",
-		[]string{"hello"},
+		[]Token{
+			{Type: ValueToken, Value: "hello"},
+		},
+	)
+}
+
+func TestComplexTokens(t *testing.T) {
+	assertTokenValues(
+		t,
+		"Hi, {{name}}, we are {{#persons}}{{name}}{{/persons}}!",
+		[]Token{
+			{Type: TextToken, Value: "Hi, "},
+			{Type: ValueToken, Value: "name"},
+			{Type: TextToken, Value: ", we are "},
+			{Type: ValueToken, Value: "#persons"},
+			{Type: ValueToken, Value: "name"},
+			{Type: ValueToken, Value: "/persons"},
+			{Type: TextToken, Value: "!"},
+		},
 	)
 }
