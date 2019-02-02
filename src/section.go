@@ -20,18 +20,18 @@ func (s *TextSection) Render(context Context) string {
 	return s.Text
 }
 
-// TAG SECTION
+// VALUE SECTION
 
-type TagSection struct {
+type ValueSection struct {
 	Name string
 }
 
-func NewTagSection(name string) *TagSection {
-	s := new(TagSection)
+func NewValueSection(name string) *ValueSection {
+	s := new(ValueSection)
 	s.Name = name
 	return s
 }
 
-func (s *TagSection) Render(context Context) string {
+func (s *ValueSection) Render(context Context) string {
 	return context[s.Name]
 }

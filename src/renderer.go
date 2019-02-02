@@ -21,7 +21,7 @@ func compile(template string) ([]Section, error) {
 		case TextToken:
 			sections = append(sections, NewTextSection(token.Value))
 		case ValueToken:
-			sections = append(sections, NewTagSection(token.Value))
+			sections = append(sections, NewValueSection(token.Value))
 		}
 	}
 	return sections, nil
