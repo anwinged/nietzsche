@@ -11,6 +11,7 @@ const (
 	TextToken TokenType = iota
 	ValueToken
 	OpenSectionToken
+	InvertedSectionToken
 	CloseSectionToken
 )
 
@@ -62,6 +63,8 @@ func createTagToken(val string) Token {
 	switch head {
 	case '#':
 		return Token{Type: OpenSectionToken, Value: tail}
+	case '^':
+		return Token{Type: InvertedSectionToken, Value: tail}
 	case '/':
 		return Token{Type: CloseSectionToken, Value: tail}
 	}
