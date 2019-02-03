@@ -2,12 +2,6 @@ package main
 
 import "strings"
 
-// COMTEXT
-
-type Context map[string]interface{}
-
-type ContextList []Context
-
 // SECTIONS
 
 type Section interface {
