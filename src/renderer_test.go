@@ -63,6 +63,33 @@ func TestForgottenTag(t *testing.T) {
 func TestGroupTag(t *testing.T) {
 	assertEquals(
 		t,
+		"Hello, Mike!",
+		"Hello, {{#persons}}{{name}}{{/persons}}!",
+		Context{
+			"persons": ContextList{
+				Context{"name": "Mike"},
+			},
+		},
+	)
+}
+
+func TestContextStackInGroupTag(t *testing.T) {
+	assertEquals(
+		t,
+		"Hello, Moscow!",
+		"Hello, {{#persons}}{{address}}{{/persons}}!",
+		Context{
+			"address": "Moscow",
+			"persons": ContextList{
+				Context{"name": "Mike"},
+			},
+		},
+	)
+}
+
+func TestGroupTagList(t *testing.T) {
+	assertEquals(
+		t,
 		"Hello, Mike, John, Kelly, !",
 		"Hello, {{#persons}}{{name}}, {{/persons}}!",
 		Context{

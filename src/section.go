@@ -5,7 +5,7 @@ import "strings"
 // SECTIONS
 
 type Section interface {
-	Render(context Context) string
+	Render(stack ContextStack) string
 }
 
 // TEXT SECTION
@@ -20,7 +20,7 @@ func NewTextSection(text string) *TextSection {
 	return s
 }
 
-func (s *TextSection) Render(context Context) string {
+func (s *TextSection) Render(stack ContextStack) string {
 	return s.Text
 }
 
@@ -36,8 +36,8 @@ func NewValueSection(name string) *ValueSection {
 	return s
 }
 
-func (s *ValueSection) Render(context Context) string {
-	val := context[s.Name]
+func (s *ValueSection) Render(stack ContextStack) string {
+	val := stack.FindValue(s.Name)
 	switch val.(type) {
 	case nil:
 		return ""
@@ -62,19 +62,20 @@ func NewGroupSection(name string, sections []Section) *GroupSection {
 	return s
 }
 
-func (s *GroupSection) Render(context Context) string {
+func (s *GroupSection) Render(stack ContextStack) string {
 	var sb strings.Builder
-	gctx, ok := context[s.Name]
+	groupContextList := stack.FindValue(s.Name)
+	if groupContextList == nil {
+		return ""
+	}
+	list, ok := groupContextList.(ContextList)
 	if !ok {
 		return ""
 	}
-	list, ok := gctx.(ContextList)
-	if !ok {
-		return ""
-	}
-	for _, c := range list {
+	for _, context := range list {
+		newStack := stack.PushContext(context)
 		for _, section := range s.Sections {
-			sb.WriteString(section.Render(c))
+			sb.WriteString(section.Render(newStack))
 		}
 	}
 	return sb.String()
