@@ -102,8 +102,25 @@ func TestGroupTagList(t *testing.T) {
 	)
 }
 
-func BenchmarkRender(b *testing.B) {
+func BenchmarkRenderSimpleTemplate(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Render("Hello, {{world}}!", Context{"world": "World"})
+	}
+}
+
+func BenchmarkRenderComplexTemplate(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Render(
+			`Hello, {{#persons}}{{fname}} {{lname}}, {{/persons}}!
+			We are going to {{address}}.`,
+			Context{
+				"persons": ContextList{
+					Context{"fname": "Mike", "lname": "Jackson"},
+					Context{"fname": "John", "lname": "Rives"},
+					Context{"fname": "Kelly", "lname": "Snow"},
+				},
+				"address": "Moscow",
+			},
+		)
 	}
 }
