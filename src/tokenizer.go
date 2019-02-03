@@ -24,24 +24,24 @@ type Token struct {
 
 func Tokenize(template string) ([]Token, error) {
 	var tokens []Token
-	var buffer string
+	var buffer strings.Builder
 	var bracket int = 0
 
 	for _, char := range template {
 		if char == '{' {
 			bracket += 1
-			if bracket == 2 && buffer != "" {
-				tokens = append(tokens, Token{Type: TextToken, Value: buffer})
-				buffer = ""
+			if bracket == 2 && buffer.Len() != 0 {
+				tokens = append(tokens, Token{Type: TextToken, Value: buffer.String()})
+				buffer.Reset()
 			}
 		} else if char == '}' {
 			bracket -= 1
-			if bracket == 0 && buffer != "" {
-				tokens = append(tokens, createTagToken(buffer))
-				buffer = ""
+			if bracket == 0 && buffer.Len() != 0 {
+				tokens = append(tokens, createTagToken(buffer.String()))
+				buffer.Reset()
 			}
 		} else {
-			buffer += string(char)
+			buffer.WriteRune(char)
 		}
 	}
 
@@ -49,8 +49,8 @@ func Tokenize(template string) ([]Token, error) {
 		return nil, errors.New("Unexpected bracket")
 	}
 
-	if buffer != "" {
-		tokens = append(tokens, Token{Type: TextToken, Value: buffer})
+	if buffer.Len() != 0 {
+		tokens = append(tokens, Token{Type: TextToken, Value: buffer.String()})
 	}
 
 	return tokens, nil
