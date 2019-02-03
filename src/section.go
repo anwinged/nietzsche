@@ -15,9 +15,7 @@ type TextSection struct {
 }
 
 func NewTextSection(text string) *TextSection {
-	s := new(TextSection)
-	s.Text = text
-	return s
+	return &TextSection{Text: text}
 }
 
 func (s *TextSection) Render(stack ContextStack) string {
@@ -31,9 +29,7 @@ type ValueSection struct {
 }
 
 func NewValueSection(name string) *ValueSection {
-	s := new(ValueSection)
-	s.Name = name
-	return s
+	return &ValueSection{Name: name}
 }
 
 func (s *ValueSection) Render(stack ContextStack) string {
@@ -56,10 +52,7 @@ type GroupSection struct {
 }
 
 func NewGroupSection(name string, sections []Section) *GroupSection {
-	s := new(GroupSection)
-	s.Name = name
-	s.Sections = sections
-	return s
+	return &GroupSection{Name: name, Sections: sections}
 }
 
 func (s *GroupSection) Render(stack ContextStack) string {
