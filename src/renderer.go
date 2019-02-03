@@ -2,10 +2,6 @@ package main
 
 import "strings"
 
-type Context map[string]interface{}
-
-type ContextList []Context
-
 // COMPILE
 
 func Compile(template string) ([]Section, error) {
