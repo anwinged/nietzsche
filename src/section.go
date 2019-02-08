@@ -65,6 +65,8 @@ func (s *GroupSection) Render(stack ContextStack) string {
 		return s.renderBool(stack, groupContextList.(bool))
 	case ValueList:
 		return s.renderValueList(stack, groupContextList.(ValueList))
+	case Context:
+		return s.renderContext(stack, groupContextList.(Context))
 	case ContextList:
 		return s.renderContextList(stack, groupContextList.(ContextList))
 	default:
@@ -100,6 +102,15 @@ func (s *GroupSection) renderContextList(stack ContextStack, list ContextList) s
 		for _, section := range s.Sections {
 			sb.WriteString(section.Render(newStack))
 		}
+	}
+	return sb.String()
+}
+
+func (s *GroupSection) renderContext(stack ContextStack, context Context) string {
+	var sb strings.Builder
+	newStack := stack.PushContext(context)
+	for _, section := range s.Sections {
+		sb.WriteString(section.Render(newStack))
 	}
 	return sb.String()
 }

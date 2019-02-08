@@ -82,7 +82,18 @@ func TestValueListGroupTag(t *testing.T) {
 	)
 }
 
-func TestGroupTag(t *testing.T) {
+func TestContextGroupTag(t *testing.T) {
+	assertEquals(
+		t,
+		"Hello, Mike!",
+		"Hello, {{#person}}{{name}}{{/person}}!",
+		Context{
+			"person": Context{"name": "Mike"},
+		},
+	)
+}
+
+func TestContextListGroupTag(t *testing.T) {
 	assertEquals(
 		t,
 		"Hello, Mike!",
