@@ -62,25 +62,32 @@ func (s *GroupSection) Render(stack ContextStack) string {
 	}
 	switch groupContextList.(type) {
 	case bool:
-		condition := groupContextList.(bool)
-		if !condition {
-			return ""
-		}
-		var sb strings.Builder
-		for _, section := range s.Sections {
-			sb.WriteString(section.Render(stack))
-		}
-		return sb.String()
+		return s.renderBool(stack, groupContextList.(bool))
 	case ContextList:
-		var sb strings.Builder
-		for _, context := range groupContextList.(ContextList) {
-			newStack := stack.PushContext(context)
-			for _, section := range s.Sections {
-				sb.WriteString(section.Render(newStack))
-			}
-		}
-		return sb.String()
+		return s.renderContextList(stack, groupContextList.(ContextList))
 	default:
 		return ""
 	}
+}
+
+func (s *GroupSection) renderBool(stack ContextStack, condition bool) string {
+	if !condition {
+		return ""
+	}
+	var sb strings.Builder
+	for _, section := range s.Sections {
+		sb.WriteString(section.Render(stack))
+	}
+	return sb.String()
+}
+
+func (s *GroupSection) renderContextList(stack ContextStack, list ContextList) string {
+	var sb strings.Builder
+	for _, context := range list {
+		newStack := stack.PushContext(context)
+		for _, section := range s.Sections {
+			sb.WriteString(section.Render(newStack))
+		}
+	}
+	return sb.String()
 }
