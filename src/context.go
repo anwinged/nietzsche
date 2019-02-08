@@ -8,6 +8,8 @@ type ContextList []Context
 
 type ContextStack []Context
 
+type ValueList []interface{}
+
 func (c ContextStack) PushContext(v Context) ContextStack {
 	return append(c, v)
 }

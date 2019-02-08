@@ -71,6 +71,17 @@ func TestBooleanGroupTag(t *testing.T) {
 	)
 }
 
+func TestValueListGroupTag(t *testing.T) {
+	assertEquals(
+		t,
+		"Hello, MikeMikeMike!",
+		"Hello, {{#name}}Mike{{/name}}!",
+		Context{
+			"name": ValueList{1, 2, 3},
+		},
+	)
+}
+
 func TestGroupTag(t *testing.T) {
 	assertEquals(
 		t,
