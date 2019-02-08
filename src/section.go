@@ -56,20 +56,31 @@ func NewGroupSection(name string, sections []Section) *GroupSection {
 }
 
 func (s *GroupSection) Render(stack ContextStack) string {
-	var sb strings.Builder
 	groupContextList := stack.FindValue(s.Name)
 	if groupContextList == nil {
 		return ""
 	}
-	list, ok := groupContextList.(ContextList)
-	if !ok {
+	switch groupContextList.(type) {
+	case bool:
+		condition := groupContextList.(bool)
+		if !condition {
+			return ""
+		}
+		var sb strings.Builder
+		for _, section := range s.Sections {
+			sb.WriteString(section.Render(stack))
+		}
+		return sb.String()
+	case ContextList:
+		var sb strings.Builder
+		for _, context := range groupContextList.(ContextList) {
+			newStack := stack.PushContext(context)
+			for _, section := range s.Sections {
+				sb.WriteString(section.Render(newStack))
+			}
+		}
+		return sb.String()
+	default:
 		return ""
 	}
-	for _, context := range list {
-		newStack := stack.PushContext(context)
-		for _, section := range s.Sections {
-			sb.WriteString(section.Render(newStack))
-		}
-	}
-	return sb.String()
 }

@@ -60,6 +60,17 @@ func TestForgottenTag(t *testing.T) {
 	)
 }
 
+func TestBooleanGroupTag(t *testing.T) {
+	assertEquals(
+		t,
+		"Hello, Mike!",
+		"Hello, {{#name}}Mike{{/name}}!",
+		Context{
+			"name": true,
+		},
+	)
+}
+
 func TestGroupTag(t *testing.T) {
 	assertEquals(
 		t,
