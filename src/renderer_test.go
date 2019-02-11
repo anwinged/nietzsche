@@ -135,13 +135,21 @@ func TestGroupTagList(t *testing.T) {
 	)
 }
 
-func BenchmarkRenderSimpleTemplate(b *testing.B) {
+// Benchmarking, func number - number of tokens
+
+func BenchmarkRender1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Render("Hello, {{world}}!", Context{"world": "World"})
+		Render("{{x}}", Context{"x": "A"})
 	}
 }
 
-func BenchmarkRenderComplexTemplate(b *testing.B) {
+func BenchmarkRender3(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Render("Hello, {{world}}!!", Context{"world": "World"})
+	}
+}
+
+func BenchmarkRender10(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Render(
 			`Hello, {{#persons}}{{fname}} {{lname}}, {{/persons}}!
