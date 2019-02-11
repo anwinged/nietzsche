@@ -1,9 +1,15 @@
 # Go cache directory
 .cache/
 
+# Text executables
+*.test
+
 # Coverage files
 coverage.out
 coverage.html
+
+# Profile test files
+profile-*.out
 
 # Sublime Text project files
 *.sublime-*
