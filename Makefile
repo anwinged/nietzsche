@@ -24,4 +24,8 @@ test: format
 	${goexec} test -v -cover ./src
 
 benchmark: format
-	${goexec} test -v -bench=. ./src
+	${goexec} test -bench=. ./src
+
+coverage:
+	${goexec} test -covermode=count -coverprofile=coverage.out ./src
+	${goexec} tool cover -html=coverage.out -o coverage.html

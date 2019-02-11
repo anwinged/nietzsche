@@ -1,5 +1,9 @@
 # Go cache directory
 .cache/
 
+# Coverage files
+coverage.out
+coverage.html
+
 # Sublime Text project files
 *.sublime-*
