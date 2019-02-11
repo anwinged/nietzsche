@@ -37,3 +37,9 @@ profile-cpu:
 profile-mem:
 	${goexec} test -memprofile=profile-mem.out -run=NONE -bench=.
 	${goexec} tool pprof -text -nodecount=20 ./app.test profile-mem.out
+
+clean:
+	rm -rf ./src/.cache
+	rm -f ./src/coverage.{out,html}
+	rm -f ./src/profile-{cpu,mem}.out
+	rm -f ./src/app.test
