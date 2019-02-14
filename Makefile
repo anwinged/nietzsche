@@ -7,7 +7,7 @@ goimage = docker run \
 	--tty \
 	--init \
 	--user ${uid}:${gid} \
-	--volume "${PWD}/src":/app \
+	--volume "${PWD}":/app \
 	--env GOCACHE=".cache" \
 	--workdir /app \
 	${image}
@@ -39,7 +39,7 @@ profile-mem:
 	${goexec} tool pprof -text -nodecount=20 ./app.test profile-mem.out
 
 clean:
-	rm -rf ./src/.cache
-	rm -f ./src/coverage.{out,html}
-	rm -f ./src/profile-{cpu,mem}.out
-	rm -f ./src/app.test
+	rm -rf ./.cache
+	rm -f  ./coverage.{out,html}
+	rm -f  ./profile-{cpu,mem}.out
+	rm -f  ./app.test
