@@ -9,10 +9,12 @@ func Render(template string, context Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	sections, err := Compile(tokens)
 	if err != nil {
 		return "", err
 	}
+
 	return RenderAST(sections, context)
 }
 
