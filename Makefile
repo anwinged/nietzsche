@@ -1,8 +1,8 @@
-uid = $(shell id -u)
-gid = $(shell id -g)
-image = golang:1.11
+uid := $(shell id -u)
+gid := $(shell id -g)
+image := golang:1.11
 
-goimage = docker run \
+goimage := docker run \
 	--rm \
 	--tty \
 	--init \
@@ -12,7 +12,7 @@ goimage = docker run \
 	--workdir /app \
 	${image}
 
-goexec = ${goimage} go
+goexec := ${goimage} go
 
 format:
 	${goexec} fmt
@@ -40,6 +40,6 @@ profile-mem:
 
 clean:
 	rm -rf ./.cache
-	rm -f  ./coverage.{out,html}
-	rm -f  ./profile-{cpu,mem}.out
+	rm -f  ./coverage.out ./coverage.html
+	rm -f  ./profile-cpu.out ./profile-mem.out
 	rm -f  ./app.test
