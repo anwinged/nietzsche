@@ -9,6 +9,10 @@ func Render(template string, context Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	return RenderAST(sections, context)
+}
+
+func RenderAST(sections []Section, context Context) (string, error) {
 	stack := ContextStack{context}
 	var sb strings.Builder
 	for _, s := range sections {
