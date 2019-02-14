@@ -20,6 +20,9 @@ format:
 run:
 	${goexec} run
 
+build: format
+	${goexec} build
+
 test: format
 	${goexec} test -v -cover
 

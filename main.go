@@ -1,16 +1,39 @@
 package main
 
 import "fmt"
+import "flag"
+import "os"
+import "io/ioutil"
+import "encoding/json"
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
 
 func main() {
-	result, err := Render(
-		"{{h}}, {{w}}!",
-		Context{"h": "Hello", "w": "World"},
-	)
-
-	if err != nil {
-		fmt.Println("Error")
-	} else {
-		fmt.Println(result)
+	flag.Parse()
+	if flag.NArg() < 2 {
+		os.Exit(1)
 	}
+
+	templateFile := flag.Arg(0)
+	dataFile := flag.Arg(1)
+
+	template, err := ioutil.ReadFile(templateFile)
+	check(err)
+
+	dataText, err := ioutil.ReadFile(dataFile)
+	check(err)
+
+	var data map[string]interface{}
+
+	err = json.Unmarshal(dataText, &data)
+	check(err)
+
+	result, err := Render(string(template), Context(data))
+	check(err)
+
+	fmt.Println(result)
 }
