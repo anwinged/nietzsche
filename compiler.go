@@ -1,11 +1,7 @@
 package main
 
-func Compile(template string) ([]Section, error) {
+func Compile(tokens []Token) ([]Section, error) {
 	var sections []Section
-	tokens, err := Tokenize(template)
-	if err != nil {
-		return nil, err
-	}
 	var group bool = false
 	var buffer []Section
 	for _, token := range tokens {

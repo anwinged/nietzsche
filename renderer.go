@@ -5,7 +5,11 @@ import "strings"
 // RENDER
 
 func Render(template string, context Context) (string, error) {
-	sections, err := Compile(template)
+	tokens, err := Tokenize(template)
+	if err != nil {
+		return "", err
+	}
+	sections, err := Compile(tokens)
 	if err != nil {
 		return "", err
 	}
