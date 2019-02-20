@@ -150,10 +150,10 @@ func differ(diffs []df.Diff) bool {
 	return false
 }
 
-func TestRenderFile(t *testing.T) {
-	templateFile := "./share/test/simple/template.mustache"
-	dataFile := "./share/test/simple/data.json"
-	resultFile := "./share/test/simple/result.txt"
+func testRenderFile(t *testing.T, testCase string) {
+	templateFile := testCase + "/" + "template.mustache"
+	dataFile := testCase + "/" + "data.json"
+	resultFile := testCase + "/" + "result.txt"
 
 	template, err := ioutil.ReadFile(templateFile)
 	check(err)
@@ -183,6 +183,10 @@ func TestRenderFile(t *testing.T) {
 		t.Log("\n" + dmp.DiffPrettyText(diffs))
 		t.Error("Render fails: result not match expected")
 	}
+}
+
+func TestRenderFile(t *testing.T) {
+	testRenderFile(t, "./share/test/simple")
 }
 
 // Benchmarking, func number - number of tokens
