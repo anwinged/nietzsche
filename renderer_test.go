@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"testing"
+
+	df "github.com/sergi/go-diff/diffmatchpatch"
 )
 
 func assertEquals(t *testing.T, expected string, template string, params Context) {
@@ -139,6 +141,15 @@ func TestGroupTagList(t *testing.T) {
 	)
 }
 
+func differ(diffs []df.Diff) bool {
+	for _, d := range diffs {
+		if d.Type != df.DiffEqual {
+			return true
+		}
+	}
+	return false
+}
+
 func TestRenderFile(t *testing.T) {
 	templateFile := "./share/test/simple/template.mustache"
 	dataFile := "./share/test/simple/data.json"
@@ -165,8 +176,12 @@ func TestRenderFile(t *testing.T) {
 		t.Errorf("Render fails: %s", err)
 	}
 
-	if result != string(resultText) {
-		t.Errorf("Render fails: result not match expected")
+	dmp := df.New()
+	diffs := dmp.DiffMain(string(resultText), result, false)
+
+	if differ(diffs) {
+		t.Log("\n" + dmp.DiffPrettyText(diffs))
+		t.Error("Render fails: result not match expected")
 	}
 }
 
