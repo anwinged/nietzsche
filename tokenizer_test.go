@@ -1,8 +1,10 @@
 package main
 
-import "testing"
-import "reflect"
-import "strings"
+import (
+	"reflect"
+	"strings"
+	"testing"
+)
 
 func assertTokenValues(t *testing.T, template string, expected []Token) {
 	tokens, err := Tokenize(template)

@@ -1,6 +1,7 @@
 uid := $(shell id -u)
 gid := $(shell id -g)
-image := golang:1.11
+
+image := nietzsche-golang
 
 goimage := docker run \
 	--rm \
@@ -14,8 +15,11 @@ goimage := docker run \
 
 goexec := ${goimage} go
 
+build-docker:
+	docker build -t ${image} .
+
 format:
-	${goexec} fmt
+	${goimage} goimports -w .
 
 run:
 	${goexec} run

@@ -1,8 +1,10 @@
 package main
 
-import "testing"
-import "io/ioutil"
-import "encoding/json"
+import (
+	"encoding/json"
+	"io/ioutil"
+	"testing"
+)
 
 func assertEquals(t *testing.T, expected string, template string, params Context) {
 	result, err := Render(template, params)

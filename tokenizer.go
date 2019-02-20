@@ -1,7 +1,9 @@
 package main
 
-import "errors"
-import "strings"
+import (
+	"errors"
+	"strings"
+)
 
 // Token type
 

@@ -1,10 +1,12 @@
 package main
 
-import "fmt"
-import "flag"
-import "os"
-import "io/ioutil"
-import "encoding/json"
+import (
+	"encoding/json"
+	"flag"
+	"fmt"
+	"io/ioutil"
+	"os"
+)
 
 func check(e error) {
 	if e != nil {
