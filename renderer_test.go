@@ -1,6 +1,8 @@
 package main
 
 import "testing"
+import "io/ioutil"
+import "encoding/json"
 
 func assertEquals(t *testing.T, expected string, template string, params Context) {
 	result, err := Render(template, params)
@@ -133,6 +135,37 @@ func TestGroupTagList(t *testing.T) {
 			},
 		},
 	)
+}
+
+func TestRenderFile(t *testing.T) {
+	templateFile := "./share/test/simple/template.mustache"
+	dataFile := "./share/test/simple/data.json"
+	resultFile := "./share/test/simple/result.txt"
+
+	template, err := ioutil.ReadFile(templateFile)
+	check(err)
+
+	dataText, err := ioutil.ReadFile(dataFile)
+	check(err)
+
+	resultText, err := ioutil.ReadFile(resultFile)
+	check(err)
+
+	var data map[string]interface{}
+
+	err = json.Unmarshal(dataText, &data)
+	check(err)
+
+	result, err := Render(string(template), Context(data))
+	check(err)
+
+	if err != nil {
+		t.Errorf("Render fails: %s", err)
+	}
+
+	if result != string(resultText) {
+		t.Errorf("Render fails: result not match expected")
+	}
 }
 
 // Benchmarking, func number - number of tokens
