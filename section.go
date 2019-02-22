@@ -70,8 +70,6 @@ func (s *GroupSection) Render(stack ContextStack) string {
 	switch groupContextList.(type) {
 	case bool:
 		return s.renderBool(stack, groupContextList.(bool))
-	case []map[string]interface{}:
-		return s.renderContextList(stack, groupContextList.([]map[string]interface{}))
 	case map[string]interface{}:
 		return s.renderContext(stack, groupContextList.(map[string]interface{}))
 	case []interface{}:
@@ -103,17 +101,6 @@ func (s *GroupSection) renderValueList(stack ContextStack, list []interface{}) s
 			} else {
 				sb.WriteString(section.Render(stack))
 			}
-		}
-	}
-	return sb.String()
-}
-
-func (s *GroupSection) renderContextList(stack ContextStack, list []map[string]interface{}) string {
-	var sb strings.Builder
-	for _, context := range list {
-		newStack := stack.PushContext(context)
-		for _, section := range s.Sections {
-			sb.WriteString(section.Render(newStack))
 		}
 	}
 	return sb.String()
