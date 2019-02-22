@@ -19,3 +19,18 @@ This is a private message.
 
 Well, 6000 dollars, after taxes.
 
+
+<!-- Section with new context (object) -->
+
+Address: New York city, street 5 Avenue.
+
+<!-- List of objects -->
+
+Second place:
+
+* Mike
+
+* Bill
+
+* Jane
+

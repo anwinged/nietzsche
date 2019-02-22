@@ -7,7 +7,7 @@
 	"in_ca": true,
 	"address": {
 		"city": "New York",
-		"address": "5 Avenue"
+		"street": "5 Avenue"
 	},
 	"second": [
 		{ "name": "Mike" },

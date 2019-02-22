@@ -19,3 +19,14 @@ You have just won {{value}} dollars!
 {{#in_ca}}
 Well, {{taxed_value}} dollars, after taxes.
 {{/in_ca}}
+
+<!-- Section with new context (object) -->
+
+Address: {{#address}}{{city}} city, street {{street}}.{{/address}}
+
+<!-- List of objects -->
+
+Second place:
+{{#second}}
+* {{name}}
+{{/second}}
