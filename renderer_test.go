@@ -8,7 +8,7 @@ import (
 	df "github.com/sergi/go-diff/diffmatchpatch"
 )
 
-func assertEquals(t *testing.T, expected string, template string, params Context) {
+func assertEquals(t *testing.T, expected string, template string, params map[string]interface{}) {
 	result, err := Render(template, params)
 	if err != nil {
 		t.Errorf("Render fails with error \"%s\"", err)
@@ -18,7 +18,7 @@ func assertEquals(t *testing.T, expected string, template string, params Context
 	}
 }
 
-func assertError(t *testing.T, template string, params Context) {
+func assertError(t *testing.T, template string, params map[string]interface{}) {
 	result, err := Render(template, params)
 	if err == nil {
 		t.Errorf("Render success, but error expected ('%s' => '%s')", template, result)
@@ -30,13 +30,13 @@ func TestOneTag(t *testing.T) {
 		t,
 		"Bill Clinton",
 		"{{name}} Clinton",
-		Context{"name": "Bill"},
+		map[string]interface{}{"name": "Bill"},
 	)
 	assertEquals(
 		t,
 		"Jack",
 		"{{name}}",
-		Context{"name": "Jack"},
+		map[string]interface{}{"name": "Jack"},
 	)
 }
 
@@ -45,7 +45,7 @@ func TestTwoTag(t *testing.T) {
 		t,
 		"Hello, Great World!",
 		"Hello, {{g}} {{w}}!",
-		Context{"g": "Great", "w": "World"},
+		map[string]interface{}{"g": "Great", "w": "World"},
 	)
 }
 
@@ -54,7 +54,7 @@ func TestMissedTagValue(t *testing.T) {
 		t,
 		"Hello, Great !",
 		"Hello, {{g}} {{w}}!",
-		Context{"g": "Great"},
+		map[string]interface{}{"g": "Great"},
 	)
 }
 
@@ -62,7 +62,7 @@ func TestForgottenTag(t *testing.T) {
 	assertError(
 		t,
 		"Hello, {{w",
-		Context{"w": "World"},
+		map[string]interface{}{"w": "World"},
 	)
 }
 
@@ -71,7 +71,7 @@ func TestBooleanGroupTag(t *testing.T) {
 		t,
 		"Hello, Mike!",
 		"Hello, {{#name}}Mike{{/name}}!",
-		Context{
+		map[string]interface{}{
 			"name": true,
 		},
 	)
@@ -82,8 +82,8 @@ func TestValueListGroupTag(t *testing.T) {
 		t,
 		"Hello, MikeMikeMike!",
 		"Hello, {{#name}}Mike{{/name}}!",
-		Context{
-			"name": ValueList{1, 2, 3},
+		map[string]interface{}{
+			"name": []interface{}{1, 2, 3},
 		},
 	)
 }
@@ -93,8 +93,8 @@ func TestContextGroupTag(t *testing.T) {
 		t,
 		"Hello, Mike!",
 		"Hello, {{#person}}{{name}}{{/person}}!",
-		Context{
-			"person": Context{"name": "Mike"},
+		map[string]interface{}{
+			"person": map[string]interface{}{"name": "Mike"},
 		},
 	)
 }
@@ -104,9 +104,9 @@ func TestContextListGroupTag(t *testing.T) {
 		t,
 		"Hello, Mike!",
 		"Hello, {{#persons}}{{name}}{{/persons}}!",
-		Context{
-			"persons": ContextList{
-				Context{"name": "Mike"},
+		map[string]interface{}{
+			"persons": []interface{}{
+				map[string]interface{}{"name": "Mike"},
 			},
 		},
 	)
@@ -117,10 +117,10 @@ func TestContextStackInGroupTag(t *testing.T) {
 		t,
 		"Hello, Moscow!",
 		"Hello, {{#persons}}{{address}}{{/persons}}!",
-		Context{
+		map[string]interface{}{
 			"address": "Moscow",
-			"persons": ContextList{
-				Context{"name": "Mike"},
+			"persons": []interface{}{
+				map[string]interface{}{"name": "Mike"},
 			},
 		},
 	)
@@ -131,11 +131,11 @@ func TestGroupTagList(t *testing.T) {
 		t,
 		"Hello, Mike, John, Kelly, !",
 		"Hello, {{#persons}}{{name}}, {{/persons}}!",
-		Context{
-			"persons": ContextList{
-				Context{"name": "Mike"},
-				Context{"name": "John"},
-				Context{"name": "Kelly"},
+		map[string]interface{}{
+			"persons": []interface{}{
+				map[string]interface{}{"name": "Mike"},
+				map[string]interface{}{"name": "John"},
+				map[string]interface{}{"name": "Kelly"},
 			},
 		},
 	)
@@ -169,7 +169,7 @@ func testRenderFile(t *testing.T, testCase string) {
 	err = json.Unmarshal(dataText, &data)
 	check(err)
 
-	result, err := Render(string(template), Context(data))
+	result, err := Render(string(template), data)
 	check(err)
 
 	if err != nil {
@@ -194,13 +194,13 @@ func TestRenderFile(t *testing.T) {
 
 func BenchmarkRender1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Render("{{x}}", Context{"x": "A"})
+		Render("{{x}}", map[string]interface{}{"x": "A"})
 	}
 }
 
 func BenchmarkRender3(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Render("Hello, {{world}}!!", Context{"world": "World"})
+		Render("Hello, {{world}}!!", map[string]interface{}{"world": "World"})
 	}
 }
 
@@ -209,11 +209,11 @@ func BenchmarkRender10(b *testing.B) {
 		Render(
 			`Hello, {{#persons}}{{fname}} {{lname}}, {{/persons}}!
 			We are going to {{address}}.`,
-			Context{
-				"persons": ContextList{
-					Context{"fname": "Mike", "lname": "Jackson"},
-					Context{"fname": "John", "lname": "Rives"},
-					Context{"fname": "Kelly", "lname": "Snow"},
+			map[string]interface{}{
+				"persons": []interface{}{
+					map[string]interface{}{"fname": "Mike", "lname": "Jackson"},
+					map[string]interface{}{"fname": "John", "lname": "Rives"},
+					map[string]interface{}{"fname": "Kelly", "lname": "Snow"},
 				},
 				"address": "Moscow",
 			},

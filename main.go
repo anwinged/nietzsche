@@ -34,7 +34,7 @@ func main() {
 	err = json.Unmarshal(dataText, &data)
 	check(err)
 
-	result, err := Render(string(template), Context(data))
+	result, err := Render(string(template), data)
 	check(err)
 
 	fmt.Println(result)

@@ -3,10 +3,10 @@ package main
 import "testing"
 
 func makeContextStack() ContextStack {
-	contexts := []Context{
-		Context{"a": 1, "b": 2},
-		Context{"c": 1, "d": 2},
-		Context{"e": 1, "f": 2},
+	contexts := []map[string]interface{}{
+		{"a": 1, "b": 2},
+		{"c": 1, "d": 2},
+		{"e": 1, "f": 2},
 	}
 
 	stack := ContextStack{}

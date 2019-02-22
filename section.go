@@ -70,12 +70,12 @@ func (s *GroupSection) Render(stack ContextStack) string {
 	switch groupContextList.(type) {
 	case bool:
 		return s.renderBool(stack, groupContextList.(bool))
-	case ValueList:
-		return s.renderValueList(stack, groupContextList.(ValueList))
-	case Context:
-		return s.renderContext(stack, groupContextList.(Context))
-	case ContextList:
-		return s.renderContextList(stack, groupContextList.(ContextList))
+	case []map[string]interface{}:
+		return s.renderContextList(stack, groupContextList.([]map[string]interface{}))
+	case map[string]interface{}:
+		return s.renderContext(stack, groupContextList.(map[string]interface{}))
+	case []interface{}:
+		return s.renderValueList(stack, groupContextList.([]interface{}))
 	default:
 		return ""
 	}
@@ -92,17 +92,23 @@ func (s *GroupSection) renderBool(stack ContextStack, condition bool) string {
 	return sb.String()
 }
 
-func (s *GroupSection) renderValueList(stack ContextStack, list ValueList) string {
+func (s *GroupSection) renderValueList(stack ContextStack, list []interface{}) string {
 	var sb strings.Builder
-	for range list {
+	for _, el := range list {
 		for _, section := range s.Sections {
-			sb.WriteString(section.Render(stack))
+			casted, ok := el.(map[string]interface{})
+			if ok {
+				newStack := stack.PushContext(casted)
+				sb.WriteString(section.Render(newStack))
+			} else {
+				sb.WriteString(section.Render(stack))
+			}
 		}
 	}
 	return sb.String()
 }
 
-func (s *GroupSection) renderContextList(stack ContextStack, list ContextList) string {
+func (s *GroupSection) renderContextList(stack ContextStack, list []map[string]interface{}) string {
 	var sb strings.Builder
 	for _, context := range list {
 		newStack := stack.PushContext(context)
@@ -113,7 +119,7 @@ func (s *GroupSection) renderContextList(stack ContextStack, list ContextList) s
 	return sb.String()
 }
 
-func (s *GroupSection) renderContext(stack ContextStack, context Context) string {
+func (s *GroupSection) renderContext(stack ContextStack, context map[string]interface{}) string {
 	var sb strings.Builder
 	newStack := stack.PushContext(context)
 	for _, section := range s.Sections {

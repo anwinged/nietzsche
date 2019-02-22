@@ -2,15 +2,12 @@ package main
 
 // COMTEXT
 
-type Context map[string]interface{}
+// type Context
+// map[string]interface{}
 
-type ContextList []Context
+type ContextStack []map[string]interface{}
 
-type ContextStack []Context
-
-type ValueList []interface{}
-
-func (c ContextStack) PushContext(v Context) ContextStack {
+func (c ContextStack) PushContext(v map[string]interface{}) ContextStack {
 	return append(c, v)
 }
 
