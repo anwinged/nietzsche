@@ -1,9 +1,6 @@
 package main
 
-// COMTEXT
-
-// type Context
-// map[string]interface{}
+// CONTEXT STACK
 
 type ContextStack []map[string]interface{}
 
