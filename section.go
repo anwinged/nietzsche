@@ -8,7 +8,10 @@ import (
 // SECTIONS
 
 type Section interface {
+	Type() string
+	Desc() string
 	Render(stack ContextStack) string
+	Sections() []Section
 }
 
 // TEXT SECTION
@@ -21,8 +24,27 @@ func NewTextSection(text string) *TextSection {
 	return &TextSection{Text: text}
 }
 
+func (s *TextSection) Type() string {
+	return "TEXT"
+}
+
+func (s *TextSection) Desc() string {
+	noNewLine := strings.Replace(s.Text, "\n", "", -1)
+	l := len(noNewLine)
+	e := 15
+	if l > e {
+		return "\"" + noNewLine[:e] + "...\""
+	} else {
+		return "\"" + noNewLine[:l] + "\""
+	}
+}
+
 func (s *TextSection) Render(stack ContextStack) string {
 	return s.Text
+}
+
+func (s *TextSection) Sections() []Section {
+	return []Section{}
 }
 
 // VALUE SECTION
@@ -33,6 +55,14 @@ type ValueSection struct {
 
 func NewValueSection(name string) *ValueSection {
 	return &ValueSection{Name: name}
+}
+
+func (s *ValueSection) Type() string {
+	return "VALUE"
+}
+
+func (s *ValueSection) Desc() string {
+	return s.Name
 }
 
 func (s *ValueSection) Render(stack ContextStack) string {
@@ -51,15 +81,31 @@ func (s *ValueSection) Render(stack ContextStack) string {
 	}
 }
 
+func (s *ValueSection) Sections() []Section {
+	return []Section{}
+}
+
 // GROUP SECTION
 
 type GroupSection struct {
-	Name     string
-	Sections []Section
+	Name string
+	Sns  []Section
 }
 
 func NewGroupSection(name string, sections []Section) *GroupSection {
-	return &GroupSection{Name: name, Sections: sections}
+	return &GroupSection{Name: name, Sns: sections}
+}
+
+func (s *GroupSection) Type() string {
+	return "SECTION"
+}
+
+func (s *GroupSection) Desc() string {
+	return s.Name
+}
+
+func (s *GroupSection) Sections() []Section {
+	return s.Sns
 }
 
 func (s *GroupSection) Render(stack ContextStack) string {
@@ -84,7 +130,7 @@ func (s *GroupSection) renderBool(stack ContextStack, condition bool) string {
 		return ""
 	}
 	var sb strings.Builder
-	for _, section := range s.Sections {
+	for _, section := range s.Sns {
 		sb.WriteString(section.Render(stack))
 	}
 	return sb.String()
@@ -93,7 +139,7 @@ func (s *GroupSection) renderBool(stack ContextStack, condition bool) string {
 func (s *GroupSection) renderValueList(stack ContextStack, list []interface{}) string {
 	var sb strings.Builder
 	for _, el := range list {
-		for _, section := range s.Sections {
+		for _, section := range s.Sns {
 			casted, ok := el.(map[string]interface{})
 			if ok {
 				newStack := stack.PushContext(casted)
@@ -109,7 +155,7 @@ func (s *GroupSection) renderValueList(stack ContextStack, list []interface{}) s
 func (s *GroupSection) renderContext(stack ContextStack, context map[string]interface{}) string {
 	var sb strings.Builder
 	newStack := stack.PushContext(context)
-	for _, section := range s.Sections {
+	for _, section := range s.Sns {
 		sb.WriteString(section.Render(newStack))
 	}
 	return sb.String()
