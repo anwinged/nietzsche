@@ -1,1 +1,21 @@
-Hello, {{world}}!
+<!-- String value -->
+
+Hello, {{name}}!
+
+<!-- Number value -->
+
+You have just won {{value}} dollars!
+
+<!-- Positive logic value -->
+
+{{#if_won}}Congratulations!{{/if_won}}
+
+<!-- Negative logic cintext -->
+
+{{^public}}This is a private message.{{/public}}
+
+<!-- Logic section with captured context -->
+
+{{#in_ca}}
+Well, {{taxed_value}} dollars, after taxes.
+{{/in_ca}}

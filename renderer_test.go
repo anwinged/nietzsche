@@ -180,6 +180,7 @@ func testRenderFile(t *testing.T, testCase string) {
 	diffs := dmp.DiffMain(string(resultText), result, false)
 
 	if differ(diffs) {
+		t.Logf("\n%s\n", data)
 		t.Log("\n" + dmp.DiffPrettyText(diffs))
 		t.Error("Render fails: result not match expected")
 	}

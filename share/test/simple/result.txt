@@ -1,1 +1,21 @@
-Hello, World!
+<!-- String value -->
+
+Hello, Chris!
+
+<!-- Number value -->
+
+You have just won 10000 dollars!
+
+<!-- Positive logic value -->
+
+Congratulations!
+
+<!-- Negative logic cintext -->
+
+This is a private message.
+
+<!-- Logic section with captured context -->
+
+
+Well, 6000 dollars, after taxes.
+

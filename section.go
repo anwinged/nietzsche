@@ -1,6 +1,9 @@
 package main
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 // SECTIONS
 
@@ -39,6 +42,10 @@ func (s *ValueSection) Render(stack ContextStack) string {
 		return ""
 	case string:
 		return val.(string)
+	case int:
+		return strconv.Itoa(val.(int))
+	case float64:
+		return strconv.FormatFloat(val.(float64), 'f', -1, 64)
 	default:
 		return ""
 	}
