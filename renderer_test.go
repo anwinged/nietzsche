@@ -1,11 +1,7 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"testing"
-
-	df "github.com/sergi/go-diff/diffmatchpatch"
 )
 
 func assertEquals(t *testing.T, expected string, template string, params map[string]interface{}) {
@@ -139,55 +135,6 @@ func TestGroupTagList(t *testing.T) {
 			},
 		},
 	)
-}
-
-func differ(diffs []df.Diff) bool {
-	for _, d := range diffs {
-		if d.Type != df.DiffEqual {
-			return true
-		}
-	}
-	return false
-}
-
-func testRenderFile(t *testing.T, testCase string) {
-	templateFile := testCase + "/" + "template.mustache"
-	dataFile := testCase + "/" + "data.json"
-	resultFile := testCase + "/" + "result.txt"
-
-	template, err := ioutil.ReadFile(templateFile)
-	check(err)
-
-	dataText, err := ioutil.ReadFile(dataFile)
-	check(err)
-
-	resultText, err := ioutil.ReadFile(resultFile)
-	check(err)
-
-	var data map[string]interface{}
-
-	err = json.Unmarshal(dataText, &data)
-	check(err)
-
-	result, err := Render(string(template), data)
-	check(err)
-
-	if err != nil {
-		t.Errorf("Render fails: %s", err)
-	}
-
-	dmp := df.New()
-	diffs := dmp.DiffMain(string(resultText), result, false)
-
-	if differ(diffs) {
-		t.Logf("\n%s\n", data)
-		t.Log("\n" + dmp.DiffPrettyText(diffs))
-		t.Error("Render fails: result not match expected")
-	}
-}
-
-func TestRenderFile(t *testing.T) {
-	testRenderFile(t, "./share/test/simple")
 }
 
 // Benchmarking, func number - number of tokens
