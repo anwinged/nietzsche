@@ -159,3 +159,60 @@ func (s *GroupSection) renderContext(stack ContextStack, context map[string]inte
 	}
 	return sb.String()
 }
+
+// NEGATIVE SECTION
+
+type NegativeSection struct {
+	Name string
+	Sns  []Section
+}
+
+func NewNegativeSection(name string, sections []Section) *NegativeSection {
+	return &NegativeSection{Name: name, Sns: sections}
+}
+
+func (s *NegativeSection) Type() string {
+	return "SECTION"
+}
+
+func (s *NegativeSection) Desc() string {
+	return s.Name
+}
+
+func (s *NegativeSection) Sections() []Section {
+	return s.Sns
+}
+
+func (s *NegativeSection) Render(stack ContextStack) string {
+	groupContextList := stack.FindValue(s.Name)
+	if groupContextList == nil {
+		return ""
+	}
+	switch groupContextList.(type) {
+	case bool:
+		return s.renderNegativeBool(stack, groupContextList.(bool))
+	case int:
+		return s.renderNegativeBool(stack, groupContextList.(int) != 0)
+	case float64:
+		return s.renderNegativeBool(stack, groupContextList.(float64) != 0.0)
+	case string:
+		return s.renderNegativeBool(stack, groupContextList.(string) != "")
+	case map[string]interface{}:
+		return s.renderNegativeBool(stack, len(groupContextList.(map[string]interface{})) != 0)
+	case []interface{}:
+		return s.renderNegativeBool(stack, len(groupContextList.([]interface{})) != 0)
+	default:
+		return ""
+	}
+}
+
+func (s *NegativeSection) renderNegativeBool(stack ContextStack, condition bool) string {
+	if condition {
+		return ""
+	}
+	var sb strings.Builder
+	for _, section := range s.Sns {
+		sb.WriteString(section.Render(stack))
+	}
+	return sb.String()
+}

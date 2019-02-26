@@ -81,8 +81,8 @@ func TestNegativeBooleanGroupTag(t *testing.T) {
 	for _, value := range cases {
 		assertEquals(
 			t,
-			"Hello, !",
-			"Hello, {{#name}}Mike{{/name}}!",
+			"Hello, Mike!",
+			"Hello, {{^name}}Mike{{/name}}!",
 			map[string]interface{}{
 				"name": value,
 			},
@@ -149,6 +149,21 @@ func TestGroupTagList(t *testing.T) {
 				map[string]interface{}{"name": "Mike"},
 				map[string]interface{}{"name": "John"},
 				map[string]interface{}{"name": "Kelly"},
+			},
+		},
+	)
+}
+
+func TestDeepGroup(t *testing.T) {
+	assertEquals(
+		t,
+		"Hello, Mike!",
+		"Hello, {{#humans}}{{#persons}}{{name}}{{/persons}}{{/humans}}!",
+		map[string]interface{}{
+			"humans": map[string]interface{}{
+				"persons": map[string]interface{}{
+					"name": "Mike",
+				},
 			},
 		},
 	)
