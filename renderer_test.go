@@ -62,15 +62,32 @@ func TestForgottenTag(t *testing.T) {
 	)
 }
 
-func TestBooleanGroupTag(t *testing.T) {
-	assertEquals(
-		t,
-		"Hello, Mike!",
-		"Hello, {{#name}}Mike{{/name}}!",
-		map[string]interface{}{
-			"name": true,
-		},
-	)
+func TestPositiveBooleanGroupTag(t *testing.T) {
+	cases := []interface{}{true, 1, float64(1.0), "yes"}
+	for _, value := range cases {
+		assertEquals(
+			t,
+			"Hello, Mike!",
+			"Hello, {{#name}}Mike{{/name}}!",
+			map[string]interface{}{
+				"name": value,
+			},
+		)
+	}
+}
+
+func TestNegativeBooleanGroupTag(t *testing.T) {
+	cases := []interface{}{false, 0, float64(0.0), ""}
+	for _, value := range cases {
+		assertEquals(
+			t,
+			"Hello, !",
+			"Hello, {{#name}}Mike{{/name}}!",
+			map[string]interface{}{
+				"name": value,
+			},
+		)
+	}
 }
 
 func TestValueListGroupTag(t *testing.T) {

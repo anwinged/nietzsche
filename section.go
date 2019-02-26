@@ -109,6 +109,12 @@ func (s *GroupSection) Render(stack ContextStack) string {
 	switch groupContextList.(type) {
 	case bool:
 		return s.renderBool(stack, groupContextList.(bool))
+	case int:
+		return s.renderBool(stack, groupContextList.(int) != 0)
+	case float64:
+		return s.renderBool(stack, groupContextList.(float64) != 0.0)
+	case string:
+		return s.renderBool(stack, groupContextList.(string) != "")
 	case map[string]interface{}:
 		return s.renderContext(stack, groupContextList.(map[string]interface{}))
 	case []interface{}:
