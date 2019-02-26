@@ -29,14 +29,7 @@ func (s *TextSection) Type() string {
 }
 
 func (s *TextSection) Desc() string {
-	noNewLine := strings.Replace(s.Text, "\n", "", -1)
-	l := len(noNewLine)
-	e := 15
-	if l > e {
-		return "\"" + noNewLine[:e] + "...\""
-	} else {
-		return "\"" + noNewLine[:l] + "\""
-	}
+	return "\"" + Shorten(s.Text, 15) + "\""
 }
 
 func (s *TextSection) Render(stack ContextStack) string {
