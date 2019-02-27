@@ -47,11 +47,11 @@ func Compile(tokens []Token) ([]Node, error) {
 			stack.AddNode(NewTextNode(token.Value))
 		case ValueToken:
 			stack.AddNode(NewValueNode(token.Value))
-		case OpenNodeToken:
+		case OpenGroupToken:
 			stack.NewLayer(token.Value, false)
-		case InvertedNodeToken:
+		case OpenInvertedGroupToken:
 			stack.NewLayer(token.Value, true)
-		case CloseNodeToken:
+		case CloseGroupToken:
 			sections, neg, err := stack.CloseLayer(token.Value)
 			if err != nil {
 				return nil, err

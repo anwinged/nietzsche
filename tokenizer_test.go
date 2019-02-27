@@ -65,8 +65,8 @@ func TestNodeTokens(t *testing.T) {
 		t,
 		"{{#persons}}{{/persons}}",
 		[]Token{
-			{Type: OpenNodeToken, Value: "persons"},
-			{Type: CloseNodeToken, Value: "persons"},
+			{Type: OpenGroupToken, Value: "persons"},
+			{Type: CloseGroupToken, Value: "persons"},
 		},
 	)
 }
@@ -76,8 +76,8 @@ func TestInvertedTokens(t *testing.T) {
 		t,
 		"{{^persons}}{{/persons}}",
 		[]Token{
-			{Type: InvertedNodeToken, Value: "persons"},
-			{Type: CloseNodeToken, Value: "persons"},
+			{Type: OpenInvertedGroupToken, Value: "persons"},
+			{Type: CloseGroupToken, Value: "persons"},
 		},
 	)
 }
@@ -90,9 +90,9 @@ func TestComplexTokens(t *testing.T) {
 			{Type: TextToken, Value: "Hi, "},
 			{Type: ValueToken, Value: "name"},
 			{Type: TextToken, Value: ", we are "},
-			{Type: OpenNodeToken, Value: "persons"},
+			{Type: OpenGroupToken, Value: "persons"},
 			{Type: ValueToken, Value: "name"},
-			{Type: CloseNodeToken, Value: "persons"},
+			{Type: CloseGroupToken, Value: "persons"},
 			{Type: TextToken, Value: "!"},
 		},
 	)
