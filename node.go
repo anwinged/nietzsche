@@ -90,7 +90,7 @@ func NewGroupNode(name string, sections []Node) *GroupNode {
 }
 
 func (s *GroupNode) Type() string {
-	return "SECTION"
+	return "GROUP"
 }
 
 func (s *GroupNode) Desc() string {
@@ -172,7 +172,7 @@ func NewNegativeNode(name string, sections []Node) *NegativeNode {
 }
 
 func (s *NegativeNode) Type() string {
-	return "SECTION"
+	return "NEGATIVE"
 }
 
 func (s *NegativeNode) Desc() string {
