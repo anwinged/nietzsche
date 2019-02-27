@@ -118,3 +118,26 @@ func TestTooManyPairBrackets(t *testing.T) {
 		"Hello, {{world}}}}",
 	)
 }
+
+// Benchmarking, func number - number of tokens
+
+func BenchmarkTokenize1(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Tokenize("{{x}}")
+	}
+}
+
+func BenchmarkTokenize3(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Tokenize("Hello, {{world}}!!")
+	}
+}
+
+func BenchmarkTokenize10(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Tokenize(
+			`Hello, {{#persons}}{{fname}} {{lname}}, {{/persons}}!
+			We are going to {{address}}.`,
+		)
+	}
+}
