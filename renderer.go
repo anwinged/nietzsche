@@ -18,7 +18,7 @@ func Render(template string, context map[string]interface{}) (string, error) {
 	return RenderAST(sections, context)
 }
 
-func RenderAST(sections []Section, context map[string]interface{}) (string, error) {
+func RenderAST(sections []Node, context map[string]interface{}) (string, error) {
 	stack := ContextStack{context}
 	var sb strings.Builder
 	for _, s := range sections {

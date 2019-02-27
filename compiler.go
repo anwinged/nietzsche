@@ -2,24 +2,24 @@ package main
 
 import "errors"
 
-type SectionLayer struct {
+type NodeLayer struct {
 	name     string
 	negative bool
-	items    []Section
+	items    []Node
 }
 
-type SectionGroupStack []SectionLayer
+type NodeGroupStack []NodeLayer
 
-func NewStack() *SectionGroupStack {
-	return new(SectionGroupStack)
+func NewStack() *NodeGroupStack {
+	return new(NodeGroupStack)
 }
 
-func (s *SectionGroupStack) NewLayer(name string, negative bool) {
-	layer := SectionLayer{name, negative, []Section{}}
+func (s *NodeGroupStack) NewLayer(name string, negative bool) {
+	layer := NodeLayer{name, negative, []Node{}}
 	(*s) = append(*s, layer)
 }
 
-func (s *SectionGroupStack) CloseLayer(name string) ([]Section, bool, error) {
+func (s *NodeGroupStack) CloseLayer(name string) ([]Node, bool, error) {
 	length := len(*s)
 	lastLayer := (*s)[length-1]
 	if lastLayer.name != name {
@@ -31,35 +31,35 @@ func (s *SectionGroupStack) CloseLayer(name string) ([]Section, bool, error) {
 	return result, neg, nil
 }
 
-func (s *SectionGroupStack) AddSection(section Section) {
+func (s *NodeGroupStack) AddNode(section Node) {
 	length := len(*s)
 	lastLayer := (*s)[length-1]
 	lastLayer.items = append(lastLayer.items, section)
 	(*s)[length-1] = lastLayer
 }
 
-func Compile(tokens []Token) ([]Section, error) {
+func Compile(tokens []Token) ([]Node, error) {
 	stack := NewStack()
 	stack.NewLayer("__root__", false)
 	for _, token := range tokens {
 		switch token.Type {
 		case TextToken:
-			stack.AddSection(NewTextSection(token.Value))
+			stack.AddNode(NewTextNode(token.Value))
 		case ValueToken:
-			stack.AddSection(NewValueSection(token.Value))
-		case OpenSectionToken:
+			stack.AddNode(NewValueNode(token.Value))
+		case OpenNodeToken:
 			stack.NewLayer(token.Value, false)
-		case InvertedSectionToken:
+		case InvertedNodeToken:
 			stack.NewLayer(token.Value, true)
-		case CloseSectionToken:
+		case CloseNodeToken:
 			sections, neg, err := stack.CloseLayer(token.Value)
 			if err != nil {
 				return nil, err
 			}
 			if neg {
-				stack.AddSection(NewNegativeSection(token.Value, sections))
+				stack.AddNode(NewNegativeNode(token.Value, sections))
 			} else {
-				stack.AddSection(NewGroupSection(token.Value, sections))
+				stack.AddNode(NewGroupNode(token.Value, sections))
 			}
 
 		}

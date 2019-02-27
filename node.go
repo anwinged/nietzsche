@@ -7,58 +7,58 @@ import (
 
 // SECTIONS
 
-type Section interface {
+type Node interface {
 	Type() string
 	Desc() string
 	Render(stack ContextStack) string
-	Sections() []Section
+	Nodes() []Node
 }
 
 // TEXT SECTION
 
-type TextSection struct {
+type TextNode struct {
 	Text string
 }
 
-func NewTextSection(text string) *TextSection {
-	return &TextSection{Text: text}
+func NewTextNode(text string) *TextNode {
+	return &TextNode{Text: text}
 }
 
-func (s *TextSection) Type() string {
+func (s *TextNode) Type() string {
 	return "TEXT"
 }
 
-func (s *TextSection) Desc() string {
+func (s *TextNode) Desc() string {
 	return "\"" + Shorten(s.Text, 15) + "\""
 }
 
-func (s *TextSection) Render(stack ContextStack) string {
+func (s *TextNode) Render(stack ContextStack) string {
 	return s.Text
 }
 
-func (s *TextSection) Sections() []Section {
-	return []Section{}
+func (s *TextNode) Nodes() []Node {
+	return []Node{}
 }
 
 // VALUE SECTION
 
-type ValueSection struct {
+type ValueNode struct {
 	Name string
 }
 
-func NewValueSection(name string) *ValueSection {
-	return &ValueSection{Name: name}
+func NewValueNode(name string) *ValueNode {
+	return &ValueNode{Name: name}
 }
 
-func (s *ValueSection) Type() string {
+func (s *ValueNode) Type() string {
 	return "VALUE"
 }
 
-func (s *ValueSection) Desc() string {
+func (s *ValueNode) Desc() string {
 	return s.Name
 }
 
-func (s *ValueSection) Render(stack ContextStack) string {
+func (s *ValueNode) Render(stack ContextStack) string {
 	val := stack.FindValue(s.Name)
 	switch val.(type) {
 	case nil:
@@ -74,34 +74,34 @@ func (s *ValueSection) Render(stack ContextStack) string {
 	}
 }
 
-func (s *ValueSection) Sections() []Section {
-	return []Section{}
+func (s *ValueNode) Nodes() []Node {
+	return []Node{}
 }
 
 // GROUP SECTION
 
-type GroupSection struct {
+type GroupNode struct {
 	Name string
-	Sns  []Section
+	Sns  []Node
 }
 
-func NewGroupSection(name string, sections []Section) *GroupSection {
-	return &GroupSection{Name: name, Sns: sections}
+func NewGroupNode(name string, sections []Node) *GroupNode {
+	return &GroupNode{Name: name, Sns: sections}
 }
 
-func (s *GroupSection) Type() string {
+func (s *GroupNode) Type() string {
 	return "SECTION"
 }
 
-func (s *GroupSection) Desc() string {
+func (s *GroupNode) Desc() string {
 	return s.Name
 }
 
-func (s *GroupSection) Sections() []Section {
+func (s *GroupNode) Nodes() []Node {
 	return s.Sns
 }
 
-func (s *GroupSection) Render(stack ContextStack) string {
+func (s *GroupNode) Render(stack ContextStack) string {
 	groupContextList := stack.FindValue(s.Name)
 	if groupContextList == nil {
 		return ""
@@ -124,7 +124,7 @@ func (s *GroupSection) Render(stack ContextStack) string {
 	}
 }
 
-func (s *GroupSection) renderBool(stack ContextStack, condition bool) string {
+func (s *GroupNode) renderBool(stack ContextStack, condition bool) string {
 	if !condition {
 		return ""
 	}
@@ -135,7 +135,7 @@ func (s *GroupSection) renderBool(stack ContextStack, condition bool) string {
 	return sb.String()
 }
 
-func (s *GroupSection) renderValueList(stack ContextStack, list []interface{}) string {
+func (s *GroupNode) renderValueList(stack ContextStack, list []interface{}) string {
 	var sb strings.Builder
 	for _, el := range list {
 		for _, section := range s.Sns {
@@ -151,7 +151,7 @@ func (s *GroupSection) renderValueList(stack ContextStack, list []interface{}) s
 	return sb.String()
 }
 
-func (s *GroupSection) renderContext(stack ContextStack, context map[string]interface{}) string {
+func (s *GroupNode) renderContext(stack ContextStack, context map[string]interface{}) string {
 	var sb strings.Builder
 	newStack := stack.PushContext(context)
 	for _, section := range s.Sns {
@@ -162,28 +162,28 @@ func (s *GroupSection) renderContext(stack ContextStack, context map[string]inte
 
 // NEGATIVE SECTION
 
-type NegativeSection struct {
+type NegativeNode struct {
 	Name string
-	Sns  []Section
+	Sns  []Node
 }
 
-func NewNegativeSection(name string, sections []Section) *NegativeSection {
-	return &NegativeSection{Name: name, Sns: sections}
+func NewNegativeNode(name string, sections []Node) *NegativeNode {
+	return &NegativeNode{Name: name, Sns: sections}
 }
 
-func (s *NegativeSection) Type() string {
+func (s *NegativeNode) Type() string {
 	return "SECTION"
 }
 
-func (s *NegativeSection) Desc() string {
+func (s *NegativeNode) Desc() string {
 	return s.Name
 }
 
-func (s *NegativeSection) Sections() []Section {
+func (s *NegativeNode) Nodes() []Node {
 	return s.Sns
 }
 
-func (s *NegativeSection) Render(stack ContextStack) string {
+func (s *NegativeNode) Render(stack ContextStack) string {
 	groupContextList := stack.FindValue(s.Name)
 	if groupContextList == nil {
 		return ""
@@ -206,7 +206,7 @@ func (s *NegativeSection) Render(stack ContextStack) string {
 	}
 }
 
-func (s *NegativeSection) renderNegativeBool(stack ContextStack, condition bool) string {
+func (s *NegativeNode) renderNegativeBool(stack ContextStack, condition bool) string {
 	if condition {
 		return ""
 	}

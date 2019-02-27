@@ -22,7 +22,7 @@ func main() {
 
 	if flag.NArg() == 1 && *showTokens {
 		templateFile := flag.Arg(0)
-		printSections(templateFile)
+		printNodes(templateFile)
 		os.Exit(0)
 	}
 
@@ -50,7 +50,7 @@ func main() {
 	fmt.Println(result)
 }
 
-func printSections(templateFile string) {
+func printNodes(templateFile string) {
 	template, err := ioutil.ReadFile(templateFile)
 	check(err)
 
@@ -60,15 +60,15 @@ func printSections(templateFile string) {
 	sections, err := Compile(tokens)
 	check(err)
 
-	printSectionsRecursive(sections, 0)
+	printNodesRecursive(sections, 0)
 }
 
-func printSectionsRecursive(sections []Section, level int) {
+func printNodesRecursive(sections []Node, level int) {
 	for _, s := range sections {
 		fmt.Printf("%s%-8s %s\n", strings.Repeat("    ", level), s.Type(), s.Desc())
-		subs := s.Sections()
+		subs := s.Nodes()
 		if len(subs) > 0 {
-			printSectionsRecursive(subs, 1)
+			printNodesRecursive(subs, 1)
 		}
 	}
 }

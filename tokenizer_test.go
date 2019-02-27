@@ -60,13 +60,13 @@ func TestOneValueToken(t *testing.T) {
 	)
 }
 
-func TestSectionTokens(t *testing.T) {
+func TestNodeTokens(t *testing.T) {
 	assertTokenValues(
 		t,
 		"{{#persons}}{{/persons}}",
 		[]Token{
-			{Type: OpenSectionToken, Value: "persons"},
-			{Type: CloseSectionToken, Value: "persons"},
+			{Type: OpenNodeToken, Value: "persons"},
+			{Type: CloseNodeToken, Value: "persons"},
 		},
 	)
 }
@@ -76,8 +76,8 @@ func TestInvertedTokens(t *testing.T) {
 		t,
 		"{{^persons}}{{/persons}}",
 		[]Token{
-			{Type: InvertedSectionToken, Value: "persons"},
-			{Type: CloseSectionToken, Value: "persons"},
+			{Type: InvertedNodeToken, Value: "persons"},
+			{Type: CloseNodeToken, Value: "persons"},
 		},
 	)
 }
@@ -90,9 +90,9 @@ func TestComplexTokens(t *testing.T) {
 			{Type: TextToken, Value: "Hi, "},
 			{Type: ValueToken, Value: "name"},
 			{Type: TextToken, Value: ", we are "},
-			{Type: OpenSectionToken, Value: "persons"},
+			{Type: OpenNodeToken, Value: "persons"},
 			{Type: ValueToken, Value: "name"},
-			{Type: CloseSectionToken, Value: "persons"},
+			{Type: CloseNodeToken, Value: "persons"},
 			{Type: TextToken, Value: "!"},
 		},
 	)

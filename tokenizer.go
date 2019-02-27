@@ -12,9 +12,9 @@ type TokenType int
 const (
 	TextToken TokenType = iota
 	ValueToken
-	OpenSectionToken
-	InvertedSectionToken
-	CloseSectionToken
+	OpenNodeToken
+	InvertedNodeToken
+	CloseNodeToken
 )
 
 // Token
@@ -64,11 +64,11 @@ func createTagToken(val string) Token {
 	var tail string = strings.TrimSpace(trimmed[1:])
 	switch head {
 	case '#':
-		return Token{Type: OpenSectionToken, Value: tail}
+		return Token{Type: OpenNodeToken, Value: tail}
 	case '^':
-		return Token{Type: InvertedSectionToken, Value: tail}
+		return Token{Type: InvertedNodeToken, Value: tail}
 	case '/':
-		return Token{Type: CloseSectionToken, Value: tail}
+		return Token{Type: CloseNodeToken, Value: tail}
 	}
 	return Token{Type: ValueToken, Value: trimmed}
 }
