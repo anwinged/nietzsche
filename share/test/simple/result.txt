@@ -10,7 +10,7 @@ You have just won 10000 dollars!
 
 Congratulations!
 
-<!-- Negative logic cintext -->
+<!-- Negative logic context -->
 
 This is a private message.
 

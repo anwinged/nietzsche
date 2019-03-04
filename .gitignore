@@ -1,6 +1,9 @@
 # Go cache directory
 .cache/
 
+# Build directory
+build/
+
 # Text executables
 *.test
 
