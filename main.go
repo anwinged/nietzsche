@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -24,20 +23,20 @@ func main() {
 	if flag.NArg() == 2 {
 		templateFile := flag.Arg(0)
 		dataFile := flag.Arg(1)
-		processTemplateWithDataFile(templateFile, dataFile)
+		processTemplateFromFile(templateFile, dataFile)
 		os.Exit(0)
 	}
 
 	if flag.NArg() == 1 && *showTokens {
 		templateFile := flag.Arg(0)
-		printNodes(templateFile)
+		printTemplateStructure(templateFile)
 		os.Exit(0)
 	}
 
 	if flag.NArg() == 1 {
 		template := captureInput()
 		dataFile := flag.Arg(0)
-		processTemplate(template, dataFile)
+		processTemplateWithDataFile(template, dataFile)
 		os.Exit(0)
 	}
 
@@ -45,33 +44,21 @@ func main() {
 }
 
 func captureInput() string {
-	reader := bufio.NewReader(os.Stdin)
-	text, err := ioutil.ReadAll(reader)
+	text, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
 		check(err)
 	}
 	return string(text)
 }
 
-func processTemplateWithDataFile(templateFile, dataFile string) {
+func processTemplateFromFile(templateFile, dataFile string) {
 	template, err := ioutil.ReadFile(templateFile)
 	check(err)
 
-	dataText, err := ioutil.ReadFile(dataFile)
-	check(err)
-
-	var data map[string]interface{}
-
-	err = json.Unmarshal(dataText, &data)
-	check(err)
-
-	result, err := Render(string(template), data)
-	check(err)
-
-	fmt.Println(result)
+	processTemplateWithDataFile(string(template), dataFile)
 }
 
-func processTemplate(template, dataFile string) {
+func processTemplateWithDataFile(template, dataFile string) {
 	dataText, err := ioutil.ReadFile(dataFile)
 	check(err)
 
@@ -86,7 +73,7 @@ func processTemplate(template, dataFile string) {
 	fmt.Println(result)
 }
 
-func printNodes(templateFile string) {
+func printTemplateStructure(templateFile string) {
 	template, err := ioutil.ReadFile(templateFile)
 	check(err)
 
