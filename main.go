@@ -16,9 +16,16 @@ func check(e error) {
 }
 
 func main() {
-	showTokens := flag.Bool("tokens", false, "Show tokens of template")
+	showTokens := flag.Bool("tree", false, "Show template structure")
 
 	flag.Parse()
+
+	if flag.NArg() == 2 {
+		templateFile := flag.Arg(0)
+		dataFile := flag.Arg(1)
+		processTemplateWithDataFile(templateFile, dataFile)
+		os.Exit(0)
+	}
 
 	if flag.NArg() == 1 && *showTokens {
 		templateFile := flag.Arg(0)
@@ -26,13 +33,10 @@ func main() {
 		os.Exit(0)
 	}
 
-	if flag.NArg() < 2 {
-		os.Exit(1)
-	}
+	os.Exit(1)
+}
 
-	templateFile := flag.Arg(0)
-	dataFile := flag.Arg(1)
-
+func processTemplateWithDataFile(templateFile, dataFile string) {
 	template, err := ioutil.ReadFile(templateFile)
 	check(err)
 
