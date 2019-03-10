@@ -2,7 +2,7 @@
 
 ![Nietzsche](/share/Nietzsche.jpg)
 
-Mustache template renderer. Cause Nietzsche wrote novels and has a great mustache.
+Mustache template renderer. Cause Nietzsche wrote novels and had a great mustache.
 
 ## Build
 
