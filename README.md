@@ -1,12 +1,28 @@
-# Templater
+# Nietzsche
 
-Substitute placeholders with variables from command line 
-or environment.
+![Nietzsche](/share/Nietzsche.jpg)
 
-Example:
+Mustache template renderer. Cause Nietzsche write novels and has a great mustache.
 
-	$ tmr -i "Hello, {{name}}!" -p name:World
+## Build
 
-Results with:
+Simply build with docker:
 
-	Hello, World!
+	$ make build-docker
+	$ make build
+
+## Usage
+
+Render template
+
+	$ nietzsche template.mustache data.json
+
+Print template structure
+
+	$ nietzsche -tree template.mustache
+
+## Tests
+
+	$ make test
+
+Run tests in docker, so be sure you build environment with `make build-docker`.
