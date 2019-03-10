@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -33,7 +34,23 @@ func main() {
 		os.Exit(0)
 	}
 
+	if flag.NArg() == 1 {
+		template := captureInput()
+		dataFile := flag.Arg(0)
+		processTemplate(template, dataFile)
+		os.Exit(0)
+	}
+
 	os.Exit(1)
+}
+
+func captureInput() string {
+	reader := bufio.NewReader(os.Stdin)
+	text, err := ioutil.ReadAll(reader)
+	if err != nil {
+		check(err)
+	}
+	return string(text)
 }
 
 func processTemplateWithDataFile(templateFile, dataFile string) {
@@ -49,6 +66,21 @@ func processTemplateWithDataFile(templateFile, dataFile string) {
 	check(err)
 
 	result, err := Render(string(template), data)
+	check(err)
+
+	fmt.Println(result)
+}
+
+func processTemplate(template, dataFile string) {
+	dataText, err := ioutil.ReadFile(dataFile)
+	check(err)
+
+	var data map[string]interface{}
+
+	err = json.Unmarshal(dataText, &data)
+	check(err)
+
+	result, err := Render(template, data)
 	check(err)
 
 	fmt.Println(result)
