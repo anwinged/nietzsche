@@ -2,7 +2,7 @@
 
 ![Nietzsche](/share/Nietzsche.jpg)
 
-Mustache template renderer. Cause Nietzsche write novels and has a great mustache.
+Mustache template renderer. Cause Nietzsche wrote novels and has a great mustache.
 
 ## Build
 
@@ -11,13 +11,15 @@ Simply build with docker:
 	$ make build-docker
 	$ make build
 
+After check `build` subdirectory.
+
 ## Usage
 
-Render template
+Render template to standard output:
 
 	$ nietzsche template.mustache data.json
 
-Print template structure
+Print template structure:
 
 	$ nietzsche -tree template.mustache
 
