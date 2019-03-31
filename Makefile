@@ -19,7 +19,7 @@ goimage := docker run \
 	--init \
 	--user ${uid}:${gid} \
 	--volume "${PWD}":/app \
-	--env GOCACHE=".cache" \
+	--env GOCACHE="/app/.cache" \
 	--workdir /app \
 	${image}
 

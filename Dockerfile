@@ -1,4 +1,4 @@
-FROM golang:1.11
+FROM golang:1.12.1
 
 RUN go get -u golang.org/x/tools/cmd/goimports
 RUN go get -u github.com/sergi/go-diff/...
