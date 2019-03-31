@@ -47,7 +47,7 @@ build: format
 
 .PHONY: test
 test: format
-	${goexec} test -v -cover
+	${goimage} gotest -v -cover
 
 .PHONY: benchmark
 benchmark: format
