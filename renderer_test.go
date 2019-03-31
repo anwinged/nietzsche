@@ -173,7 +173,15 @@ func TestDeepGroup(t *testing.T) {
 }
 
 func TestInterpolation(t *testing.T) {
-	spec, err := ioutil.ReadFile("spec/specs/interpolation.yml")
+	testSpecSuite(t, "interpolation")
+}
+
+func TestSections(t *testing.T) {
+	testSpecSuite(t, "sections")
+}
+
+func testSpecSuite(t *testing.T, suiteName string) {
+	spec, err := ioutil.ReadFile("spec/specs/" + suiteName + ".yml")
 	checkErrInTest(t, err)
 
 	var data map[string]interface{}
