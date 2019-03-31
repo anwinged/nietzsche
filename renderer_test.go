@@ -1,7 +1,10 @@
 package main
 
 import (
+	"io/ioutil"
 	"testing"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 func assertEquals(t *testing.T, expected string, template string, params map[string]interface{}) {
@@ -167,6 +170,45 @@ func TestDeepGroup(t *testing.T) {
 			},
 		},
 	)
+}
+
+func TestInterpolation(t *testing.T) {
+	spec, err := ioutil.ReadFile("spec/specs/interpolation.yml")
+	checkErrInTest(t, err)
+
+	var data map[string]interface{}
+
+	err = yaml.Unmarshal([]byte(spec), &data)
+	checkErrInTest(t, err)
+
+	suites := data["tests"].([]interface{})
+
+	for _, test := range suites {
+		s := test.(map[interface{}]interface{})
+		name := s["name"]
+		template := s["template"].(string)
+		expected := s["expected"].(string)
+
+		data := make(map[string]interface{})
+		for k, v := range s["data"].(map[interface{}]interface{}) {
+			data[k.(string)] = v
+		}
+
+		result, err := Render(template, data)
+
+		checkErrInTest(t, err)
+
+		if expected != result {
+			t.Logf("%s\n", name)
+			t.Logf("Render fails. Expect \"%s\", got \"%s\"", expected, result)
+		}
+	}
+}
+
+func checkErrInTest(t *testing.T, err error) {
+	if err != nil {
+		t.Errorf("Error: %s", err)
+	}
 }
 
 // Benchmarking, func number - number of tokens
