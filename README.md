@@ -1,6 +1,6 @@
 # Nietzsche
 
-![Nietzsche](/share/Nietzsche.jpg)
+![Nietzsche](./share/Nietzsche.jpg)
 
 Mustache template renderer. Cause Nietzsche wrote novels and had a great mustache.
 

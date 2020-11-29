@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+
+	nz "github.com/anwinged/nietzsche"
 )
 
 func check(e error) {
@@ -67,7 +69,7 @@ func processTemplateWithDataFile(template, dataFile string) {
 	err = json.Unmarshal(dataText, &data)
 	check(err)
 
-	result, err := Render(template, data)
+	result, err := nz.Render(template, data)
 	check(err)
 
 	fmt.Println(result)
@@ -77,16 +79,16 @@ func printTemplateStructure(templateFile string) {
 	template, err := ioutil.ReadFile(templateFile)
 	check(err)
 
-	tokens, err := Tokenize(string(template))
+	tokens, err := nz.Tokenize(string(template))
 	check(err)
 
-	sections, err := Compile(tokens)
+	sections, err := nz.Compile(tokens)
 	check(err)
 
 	printNodesRecursive(sections, 0)
 }
 
-func printNodesRecursive(sections []Node, level int) {
+func printNodesRecursive(sections []nz.Node, level int) {
 	for _, s := range sections {
 		fmt.Printf("%s%-8s %s\n", strings.Repeat("    ", level), s.Type(), s.Desc())
 		subs := s.Nodes()

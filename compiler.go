@@ -1,4 +1,4 @@
-package main
+package nietzsche
 
 import "errors"
 
@@ -16,7 +16,7 @@ func NewStack() *NodeGroupStack {
 
 func (s *NodeGroupStack) NewLayer(name string, negative bool) {
 	layer := NodeLayer{name, negative, []Node{}}
-	(*s) = append(*s, layer)
+	*s = append(*s, layer)
 }
 
 func (s *NodeGroupStack) CloseLayer(name string) ([]Node, bool, error) {
@@ -27,7 +27,7 @@ func (s *NodeGroupStack) CloseLayer(name string) ([]Node, bool, error) {
 	}
 	result := lastLayer.items
 	neg := lastLayer.negative
-	(*s) = (*s)[:length-1]
+	*s = (*s)[:length-1]
 	return result, neg, nil
 }
 
